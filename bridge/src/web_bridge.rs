@@ -1773,16 +1773,15 @@ fn validate_web_command(method: &Method) -> Result<(), BridgeError> {
                 ));
             }
         }
-        Method::PaneFocusDirection(params) => {
+        Method::PaneFocusDirection(params)
             if params
                 .pane_id
                 .as_deref()
-                .is_none_or(|pane_id| pane_id.trim().is_empty())
-            {
-                return Err(BridgeError::BadRequest(
-                    "pane.focus_direction requires pane_id".to_string(),
-                ));
-            }
+                .is_none_or(|pane_id| pane_id.trim().is_empty()) =>
+        {
+            return Err(BridgeError::BadRequest(
+                "pane.focus_direction requires pane_id".to_string(),
+            ));
         }
         Method::PaneMove(params) => {
             if params.pane_id.trim().is_empty() {

@@ -1,4 +1,4 @@
-export type AgentStatus = "idle" | "working" | "blocked" | "done" | "unknown";
+export type AgentStatus = "idle" | "working" | "blocked" | "done" | "unknown" | "waiting";
 
 export type WorkspaceInfo = {
   workspace_id: string;

@@ -111,8 +111,8 @@ src/server/socket_paths.rs -> vendor/herdr-compat/src/server/socket_paths.rs
 - `input.rs` contains the upstream pure input model. Small config/terminal-theme shims satisfy
   shared wire types; terminal parsing and rendering remain owned by Herdr.
 - Upstream wire serialization tests live in `protocol/wire/upstream_wire_tests.rs`; two tests requiring
-  the native terminal key encoder are excluded. The production wire body remains exact and
-  separately checked against the tagged source.
+  the native terminal key encoder are excluded. Terminal attach definitions retain
+  the tagged protocol baseline; the Trailboss status decoder extension is documented below.
 - `protocol.rs` and schema tests include bridge fixture tests for the reviewed protocol/schema
   baseline.
 
@@ -173,3 +173,19 @@ Herdr:
 - exact pane focus/selection endpoint
 - resize ownership model
 - browser authentication story
+
+## Trailboss Waiting Status
+
+Trailboss adds `waiting` to the JSON API's `AgentStatus` and `PaneAgentState`.
+The compatibility crate appends these enum variants so existing binary
+discriminants remain unchanged. The client-shell JSON decoder also preserves
+`waiting` instead of relabeling it `unknown`; terminal attach protocol remains 22.
+
+The browser accepts waiting snapshots, activity events and activity history.
+Waiting indicators are blue, remain visible in active-only lists and take
+precedence over working and done in aggregate status. Blocked retains priority.
+
+These are intentional Trailboss extensions to the upstream v0.9.0 baseline.
+The optional `HERDR_SRC` exact-drift audit reports the differences in
+`api/schema/common.rs` and the JSON status decoder in `protocol/wire.rs`; review
+these documented extensions rather than replacing them with the upstream enums.

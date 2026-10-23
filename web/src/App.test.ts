@@ -1390,6 +1390,7 @@ describe("App multi-bridge helpers", () => {
         pane("idle", "workspace-a", "tab-idle", "idle"),
         pane("working", "workspace-a", "tab-working", "working"),
         pane("blocked", "workspace-a", "tab-blocked", "blocked"),
+        pane("waiting", "workspace-a", "tab-waiting", "waiting"),
       ],
     );
     const bridgeViews = [bridgeView("bridge-a", snapshot)];
@@ -1415,7 +1416,7 @@ describe("App multi-bridge helpers", () => {
         new Map(),
         true,
       ).flatMap((entry) => entry.panes.map((paneInfo) => paneInfo.pane_id)),
-    ).toEqual(["working", "blocked"]);
+    ).toEqual(["working", "blocked", "waiting"]);
   });
 
   it("sorts agent tabs within workspace boundaries for workspace grouping", () => {

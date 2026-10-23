@@ -30,7 +30,7 @@ export class AgentActivityApiError extends Error {
   }
 }
 
-const agentStatuses: AgentStatus[] = ["idle", "working", "blocked", "done", "unknown"];
+const agentStatuses: AgentStatus[] = ["idle", "working", "blocked", "done", "unknown", "waiting"];
 
 export function supportsAgentActivity(capabilities: BridgeCapabilities | null | undefined) {
   return capabilities?.agent_activity?.version === 1;

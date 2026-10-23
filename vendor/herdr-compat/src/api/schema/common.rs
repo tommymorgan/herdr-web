@@ -153,6 +153,7 @@ pub enum PaneAgentState {
     Working,
     Blocked,
     Unknown,
+    Waiting,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, schemars::JsonSchema)]
@@ -163,6 +164,7 @@ pub enum AgentStatus {
     Blocked,
     Done,
     Unknown,
+    Waiting,
 }
 
 pub(crate) fn default_true() -> bool {

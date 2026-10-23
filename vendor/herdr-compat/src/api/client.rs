@@ -303,6 +303,54 @@ mod tests {
     }
 
     #[test]
+    fn session_snapshot_preserves_waiting_status_in_each_collection() {
+        let response = serde_json::json!({
+            "id": "snapshot-waiting",
+            "result": {
+                "type": "session_snapshot",
+                "snapshot": {
+                    "version": "0.9.3",
+                    "protocol": 22,
+                    "workspaces": [{
+                        "workspace_id": "w1", "number": 1, "label": "Review",
+                        "focused": true, "pane_count": 1, "tab_count": 1,
+                        "active_tab_id": "t1", "agent_status": "idle"
+                    }],
+                    "tabs": [{
+                        "tab_id": "t1", "workspace_id": "w1", "number": 1,
+                        "label": "Agent", "focused": true, "pane_count": 1,
+                        "agent_status": "idle"
+                    }],
+                    "panes": [{
+                        "pane_id": "p1", "terminal_id": "term1",
+                        "workspace_id": "w1", "tab_id": "t1",
+                        "focused": true, "agent_status": "idle", "revision": 1
+                    }],
+                    "agents": [{
+                        "terminal_id": "term1", "workspace_id": "w1",
+                        "tab_id": "t1", "pane_id": "p1", "focused": true,
+                        "agent_status": "idle", "revision": 1
+                    }],
+                    "layouts": []
+                }
+            }
+        });
+
+        for collection in ["workspaces", "tabs", "panes", "agents"] {
+            let mut waiting_response = response.clone();
+            waiting_response["result"]["snapshot"][collection][0]["agent_status"] =
+                serde_json::json!("waiting");
+            let decoded = parse_response_value(waiting_response)
+                .unwrap_or_else(|err| panic!("waiting {collection} rejected: {err}"));
+            let decoded = serde_json::to_value(decoded).unwrap();
+            assert_eq!(
+                decoded["result"]["snapshot"][collection][0]["agent_status"], "waiting",
+                "waiting status must not be discarded or relabeled"
+            );
+        }
+    }
+
+    #[test]
     fn optional_json_line_preserves_split_utf8_across_timeout() {
         let mut reader = BufReader::new(ScriptedRead::new(vec![
             ReadStep::Bytes(b"{\"value\":\"caf\xc3"),

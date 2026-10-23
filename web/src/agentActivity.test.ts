@@ -41,6 +41,25 @@ describe("agent activity helpers", () => {
     expect(response.records[1].last_status_transition_at).toBeUndefined();
   });
 
+  it("retains waiting agents and their attention timestamps", () => {
+    const response = parseAgentActivityListResponse({
+      session_key: "session-a",
+      records: [{
+        pane_id: "review",
+        terminal_id: "terminal-review",
+        workspace_id: "workspace-a",
+        tab_id: "tab-a",
+        agent_status: "waiting",
+        last_status_transition_at: "123",
+      }],
+    });
+
+    expect(response.records[0].agent_status).toBe("waiting");
+    expect(agentActivityTimestamps("bridge-a", response).get(
+      agentActivityKey("bridge-a", "review", "terminal-review"),
+    )).toBe(123);
+  });
+
   it("rejects invalid timestamps and statuses", () => {
     expect(() =>
       parseAgentActivityListResponse({

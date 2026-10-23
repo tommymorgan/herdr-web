@@ -9185,7 +9185,7 @@ function isAgentPane(pane: PaneInfo) {
 }
 
 export function isActiveAgentStatus(status: AgentStatus) {
-  return status === "working" || status === "blocked" || status === "done";
+  return status === "working" || status === "waiting" || status === "blocked" || status === "done";
 }
 
 function emptyAgentListTitle(pinnedOnly: boolean, activeOnly: boolean) {
@@ -9203,17 +9203,19 @@ function emptyAgentListTitle(pinnedOnly: boolean, activeOnly: boolean) {
 
 const AGENT_STATUS_ORDER: Record<AgentStatus, number> = {
   blocked: 0,
-  working: 1,
-  done: 2,
-  idle: 3,
-  unknown: 4,
+  waiting: 1,
+  working: 2,
+  done: 3,
+  idle: 4,
+  unknown: 5,
 };
 const AGENT_ATTENTION_ORDER: Record<AgentStatus, number> = {
   blocked: 0,
-  done: 1,
-  working: 2,
-  idle: 3,
-  unknown: 4,
+  waiting: 1,
+  done: 2,
+  working: 3,
+  idle: 4,
+  unknown: 5,
 };
 
 function sortAgentPanes(panes: PaneInfo[], sort: AgentSort, snapshot: Snapshot) {
@@ -9618,15 +9620,18 @@ function isTouchInputViewport() {
 
 function summary(panes: PaneInfo[]) {
   const blocked = panes.filter((pane) => pane.agent_status === "blocked").length;
+  const waiting = panes.filter((pane) => pane.agent_status === "waiting").length;
   const done = panes.filter((pane) => pane.agent_status === "done").length;
   const working = panes.filter((pane) => pane.agent_status === "working").length;
   return blocked
     ? `${blocked} blocked`
-    : done
-      ? `${done} done`
-      : working
-        ? `${working} working`
-        : null;
+    : waiting
+      ? `${waiting} waiting`
+      : done
+        ? `${done} done`
+        : working
+          ? `${working} working`
+          : null;
 }
 
 function stageBreadcrumb(

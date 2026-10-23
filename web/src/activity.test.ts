@@ -100,6 +100,29 @@ describe("parseActivityMessage", () => {
 });
 
 describe("applyActivityMessage", () => {
+  it("keeps waiting agents visible in pane, tab and workspace activity", () => {
+    const data = snapshot([pane("review", "tab-1", "working"), pane("background", "tab-1", "working")]);
+    const message = parseActivityMessage(
+      JSON.stringify({
+        type: "pane.agent_status_changed",
+        pane_id: "review",
+        workspace_id: "workspace-1",
+        agent_status: "waiting",
+        agent: "omp",
+        title: null,
+        display_agent: null,
+        state_labels: {},
+      }),
+    );
+    expect(message).not.toBeNull();
+    if (!message) throw new Error("Waiting activity was rejected");
+
+    const result = applyActivityMessage(data, message);
+    expect(result.snapshot?.panes.map((item) => item.agent_status)).toEqual(["waiting", "working"]);
+    expect(result.snapshot?.tabs[0].agent_status).toBe("waiting");
+    expect(result.snapshot?.workspaces[0].agent_status).toBe("waiting");
+  });
+
   it("patches known panes and recomputes aggregate status", () => {
     const data = snapshot([{ ...pane("pane-1"), title: "Old", state_labels: { idle: "Waiting" } }]);
     const result = applyActivityMessage(data, {

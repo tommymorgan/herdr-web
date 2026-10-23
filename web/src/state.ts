@@ -10,10 +10,11 @@ import type { PaneFocusDirection } from "./commands";
 
 const statusRank: Record<AgentStatus, number> = {
   blocked: 0,
-  working: 1,
-  done: 2,
-  idle: 3,
-  unknown: 4,
+  waiting: 1,
+  working: 2,
+  done: 3,
+  idle: 4,
+  unknown: 5,
 };
 
 export function chooseSelectedPane(
@@ -324,14 +325,14 @@ export function statusLabel(status: AgentStatus) {
   return status;
 }
 
-/** Blocked and done are the states that want the user's attention. */
+/** Blocked, waiting and done are the states that want the user's attention. */
 export function isAttention(status: AgentStatus) {
-  return status === "blocked" || status === "done";
+  return status === "blocked" || status === "waiting" || status === "done";
 }
 
 /** Loud states earn an explicit word in the UI; idle/unknown stay quiet. */
 export function isLoud(status: AgentStatus) {
-  return status === "blocked" || status === "working" || status === "done";
+  return status === "blocked" || status === "waiting" || status === "working" || status === "done";
 }
 
 export function countAttention(panes: PaneInfo[]) {
@@ -340,7 +341,7 @@ export function countAttention(panes: PaneInfo[]) {
 
 /** The most urgent status present, used for ambient roll-up indicators. */
 export function aggregateStatus(panes: PaneInfo[]): AgentStatus {
-  const order: AgentStatus[] = ["blocked", "working", "done", "idle", "unknown"];
+  const order: AgentStatus[] = ["blocked", "waiting", "working", "done", "idle", "unknown"];
   for (const status of order) {
     if (panes.some((pane) => pane.agent_status === status)) {
       return status;

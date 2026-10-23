@@ -56,6 +56,7 @@
 
   /* Status -> color (matches herdr TUI semantics) */
   --st-blocked: var(--red);
+  --st-waiting: var(--blue);
   --st-working: var(--yellow);
   --st-done: var(--teal);
   --st-idle: var(--green);
@@ -935,6 +936,9 @@ button {
 .dot[data-status="blocked"] {
   background: var(--st-blocked);
 }
+.dot[data-status="waiting"] {
+  background: var(--st-waiting);
+}
 .dot[data-status="working"] {
   background: var(--st-working);
 }
@@ -950,6 +954,7 @@ button {
 
 /* attention states glow + the working one pulses */
 .dot[data-status="blocked"],
+.dot[data-status="waiting"],
 .dot[data-status="done"] {
   box-shadow: 0 0 9px -1px currentColor;
   color: inherit;
@@ -961,6 +966,9 @@ button {
 
 .pane-word[data-status="blocked"] {
   color: var(--st-blocked);
+}
+.pane-word[data-status="waiting"] {
+  color: var(--st-waiting);
 }
 .pane-word[data-status="working"] {
   color: var(--st-working);
@@ -1136,6 +1144,10 @@ button {
 .badge[data-status="blocked"] {
   border-color: color-mix(in srgb, var(--st-blocked) 45%, var(--line));
   color: var(--st-blocked);
+}
+.badge[data-status="waiting"] {
+  border-color: color-mix(in srgb, var(--st-waiting) 45%, var(--line));
+  color: var(--st-waiting);
 }
 .badge[data-status="working"] {
   border-color: color-mix(in srgb, var(--st-working) 45%, var(--line));

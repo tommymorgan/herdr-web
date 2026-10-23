@@ -16,7 +16,7 @@ export type ActivityParseResult =
   | { status: "invalid_known" }
   | { status: "ignored" };
 
-const agentStatuses: AgentStatus[] = ["idle", "working", "blocked", "done", "unknown"];
+const agentStatuses: AgentStatus[] = ["idle", "working", "blocked", "done", "unknown", "waiting"];
 
 export function parseActivityMessage(data: unknown): ActivityMessage | null {
   const result = parseActivityEventData(data);

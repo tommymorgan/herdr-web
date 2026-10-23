@@ -1,5 +1,13 @@
 # Changelog
 
+## Waiting-status compatibility (2026-10-22)
+
+- Keep Trailboss sessions accessible when an agent reports `waiting`; preserve the
+  status in snapshots, activity events and activity history instead of rejecting
+  the entire response.
+- Show waiting agents in blue, include them in active-only lists and prioritize
+  them ahead of working agents in attention and status summaries.
+
 ## [0.6.1] - 2026-09-12
 
 ### Added

@@ -898,6 +898,7 @@ where
         "working" => crate::api::schema::AgentStatus::Working,
         "blocked" => crate::api::schema::AgentStatus::Blocked,
         "done" => crate::api::schema::AgentStatus::Done,
+        "waiting" => crate::api::schema::AgentStatus::Waiting,
         _ => crate::api::schema::AgentStatus::Unknown,
     })
 }
